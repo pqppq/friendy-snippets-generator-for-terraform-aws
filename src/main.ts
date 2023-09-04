@@ -107,4 +107,4 @@ if (!existsSync("./generated")) {
 }
 // write snippets into file
 writeFileSync('./generated/terraform.json', `{\n${snippets.join(',\n')}\n}`)
-console.log("generated snippets ./terraform.json");
+console.log("generated snippets ./generated/terraform.json");
