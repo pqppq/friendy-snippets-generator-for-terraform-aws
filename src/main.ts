@@ -13,8 +13,8 @@ if (!existsSync(TMP_DIR)) {
 	process.exit(1)
 }
 
-// pick up the services that you want generate snippets
-// ⚡ LuaSnip would not work for too many snippets
+// pick up the services that you want generate snippets(filter files by its names)
+// ⚡ LuaSnip may not work for too many snippets
 const pickedServices = [
 	'api_gateway',
 	'apigateway',
