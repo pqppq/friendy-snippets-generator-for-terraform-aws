@@ -5,8 +5,7 @@
   "description": "generate friendly snippets for terraform from web docs",
   "scripts": {
     "fetch": "npx tiged https://github.com/hashicorp/terraform-provider-aws/website/docs/r tmp",
-    "build": "npx tsc",
-    "generate": "node dist/main.js"
+    "generate": "npx tsc && node dist/main.js"
   },
   "keywords": [],
   "author": "",
