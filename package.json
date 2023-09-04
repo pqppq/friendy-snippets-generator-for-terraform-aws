@@ -1,0 +1,24 @@
+{
+  "name": "terraform-aws-snippet-generator",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "generate friendly snippets for terraform from web docs",
+  "scripts": {
+    "fetch": "npx tiged https://github.com/hashicorp/terraform-provider-aws/website/docs/r tmp",
+    "build": "npx tsc",
+    "generate": "node dist/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "remark": "^14.0.3",
+    "remark-html": "^15.0.2",
+    "remark-parse": "^10.0.2",
+    "remark-stringify": "^10.0.3",
+    "typescript": "^5.2.2",
+    "unified": "^11.0.2",
+    "unist-util-visit": "^5.0.0"
+  }
+}
