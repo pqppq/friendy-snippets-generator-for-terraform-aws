@@ -52,15 +52,15 @@ const pickedServices = [
 const regex = new RegExp(`(${pickedServices.join("|")})`, 'i')
 const files = readdirSync(TMP_DIR).filter(file => regex.test(file))
 
-type extractResult = {
+type SnippetBase = {
 	resourceName: string
 	body: string[] // multiple lines of code
+	noURL?: boolean
 }
-
-const extractCode = async (fileName: string): Promise<extractResult | null> => {
+const extractSnippetBases = async (fileName: string): Promise<SnippetBase | null> => {
 	const resourceName = fileName.split('.')[0]
 	const contents = readFileSync(`${TMP_DIR}/${fileName}`)
-	const codes = []
+	const codeBlocks = []
 
 	const picker = () => {
 		return (tree) => {
@@ -69,7 +69,7 @@ const extractCode = async (fileName: string): Promise<extractResult | null> => {
 				if (code.match(`^resource "aws_${resourceName}"`)) {
 					// Split the lines to make the snippets more organized in the snippets JSON file.
 					const lines = code.split('\n').map(line => `"${line.replace(/(?<=[^\\])"/g, '\\"')}"`)
-					codes.push(lines)
+					codeBlocks.push(lines)
 				}
 			})
 		}
@@ -82,22 +82,53 @@ const extractCode = async (fileName: string): Promise<extractResult | null> => {
 		.use(picker)
 		.process(contents)
 
-	if (codes.length === 0) return null
+	if (codeBlocks.length === 0) return null
 
 	return {
 		resourceName,
-		body: codes[0] // first code blockis almost always 'Example Usage'
+		body: codeBlocks[0] // first code blockis almost always 'Example Usage'
 	}
 }
 
-const results = await Promise.all(files.map(file => extractCode(file)))
-const snippets = results
+const defaultSnippetBases: SnippetBase[] = [
+	{
+		noURL: true,
+		resourceName: "required_providers",
+		body: [
+			`"terraform {"`,
+			`"\trequired_providers {"`,
+			`"\t\taws = {"`,
+			`"\t\t\tsource = \\"hashicorp/aws\\""`,
+			`"\t\t\tversion = \\"~> 5.0\\""`,
+			`"\t\t}"`,
+			`""`,
+			`"\t\t#\tbackend \\"s3\\" {"`,
+			`"\t\t#\t\tbucket = \\"bucket name\\""`,
+			`"\t\t#\t\tkey = \\"path/to/my/key\\""`,
+			`"\t\t#\t\tregion = \\"\\""`,
+			`"\t\t#\t}"`,
+			`"\t}"`,
+			`"}"`,
+		],
+	},
+	{
+		noURL: true,
+		resourceName: "aws",
+		body: [
+			`"provider \\"aws\\" {"`,
+			`"\tregion = \\"\\""`,
+			`"}"`,
+		],
+	}
+]
+const snippetBases = await Promise.all(files.map(file => extractSnippetBases(file)))
+const snippets = [...defaultSnippetBases, ...snippetBases]
 	.filter(result => result !== null)
-	.map(({ resourceName, body }) =>
+	.map(({ resourceName, body, noURL }) =>
 		`\t"${resourceName}": {\n` +
 		`\t\t"prefix": "${resourceName}",\n` +
 		`\t\t"body": [\n` +
-		`\t\t\t"# ${DOCUMENT_ROOT}/${resourceName}",\n` +
+		(noURL ? "" : `\t\t\t"# ${DOCUMENT_ROOT}/${resourceName}",\n`) +
 		`\t\t\t${body.join(',\n\t\t\t')}\n` +
 		`\t\t]\n` +
 		`\t}`)
