@@ -86,7 +86,7 @@ const extractCode = async (fileName: string): Promise<extractResult | null> => {
 
 	return {
 		resourceName,
-		body: codes[0]
+		body: codes[0] // first code blockis almost always 'Example Usage'
 	}
 }
 
