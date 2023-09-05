@@ -92,7 +92,7 @@ const extractSnippetBases = async (fileName: string): Promise<SnippetBase | null
 		resourceName,
 		body: codeBlock.length < threshold ? codeBlock :
 			[
-			`"resource \\"aws_${resourceName}\\"{"`,
+			`"resource \\"aws_${resourceName}\\" \\"\\" {"`,
 			`"\tsnippet too long. see doc link above."`,
 			`"}"`
 		]
