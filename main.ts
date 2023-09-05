@@ -85,9 +85,17 @@ const extractSnippetBases = async (fileName: string): Promise<SnippetBase | null
 
 	if (codeBlocks.length === 0) return null
 
+	const codeBlock = codeBlocks[0] // first code blockis almost always 'Example Usage'
+	const threshold = 20
+
 	return {
 		resourceName,
-		body: codeBlocks[0] // first code blockis almost always 'Example Usage'
+		body: codeBlock.length < threshold ? codeBlock :
+			[
+			`"resource \\"aws_${resourceName}\\"{"`,
+			`"\tsnippet too long. see doc link above."`,
+			`"}"`
+		]
 	}
 }
 
@@ -162,3 +170,4 @@ if (!existsSync("./generated")) {
 // write snippets into file
 writeFileSync('./generated/terraform.json', `{\n${snippets.join(',\n')}\n}`)
 console.log("generated snippets ./generated/terraform.json");
+console.log(`total ${files.length} resources`);
