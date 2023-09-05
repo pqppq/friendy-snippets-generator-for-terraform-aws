@@ -44,6 +44,7 @@ const pickedServices = [
 	'rds',
 	'route53',
 	's3',
+	'security',
 	'ses',
 	'sqs',
 	'vpc',
