@@ -116,7 +116,29 @@ const defaultSnippetBases: SnippetBase[] = [
 		resourceName: "aws",
 		body: [
 			`"provider \\"aws\\" {"`,
-			`"\tregion = \\"\\""`,
+			`"\tregion = $1"`,
+			`"}"`,
+		],
+	},
+	{
+		noURL: true,
+		resourceName: "var",
+		body: [
+			`"variable \\"$1\\" {"`,
+			`"\ttype = $2"`,
+			`"\tvalue = $3"`,
+			`"\tdefault = $3"`,
+			`"\tdescription = $4"`,
+			`"}"`,
+		],
+	},
+	{
+		noURL: true,
+		resourceName: "out",
+		body: [
+			`"output \\"$1\\" {"`,
+			`"\tvalue = $2"`,
+			`"\tdescription = $3"`,
 			`"}"`,
 		],
 	}
