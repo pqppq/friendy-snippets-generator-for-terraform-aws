@@ -50,7 +50,7 @@ const pickedServices = [
 	'vpc',
 	'waf'
 ]
-const regex = new RegExp(`(${pickedServices.join("|")})`, 'i')
+const regex = new RegExp(`^(${pickedServices.join("|")})`, 'i')
 const files = readdirSync(TMP_DIR).filter(file => regex.test(file))
 
 type SnippetBase = {
@@ -67,7 +67,7 @@ const extractSnippetBases = async (fileName: string): Promise<SnippetBase | null
 		return (tree) => {
 			visit(tree, 'code', (node) => {
 				const code = node.value as string
-				if (code.match(`^resource "aws_${resourceName}"`)) {
+				if (code.includes(`resource "aws_${resourceName}"`)) {
 					// Split the lines to make the snippets more organized in the snippets JSON file.
 					const lines = code.split('\n').map(line => `"${line.replace(/(?<=[^\\])"/g, '\\"')}"`)
 					codeBlocks.push(lines)
