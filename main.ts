@@ -47,6 +47,7 @@ const pickedServices = [
 	'security',
 	'ses',
 	'sqs',
+	'subnet',
 	'vpc',
 	'waf'
 ]
