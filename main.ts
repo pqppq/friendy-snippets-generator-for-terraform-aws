@@ -116,7 +116,7 @@ const defaultSnippetBases: SnippetBase[] = [
 			`"\t#\t\tbucket = \\"bucket name\\""`,
 			`"\t#\t\tkey = \\"path/to/my/key\\""`,
 			`"\t#\t\tregion = \\"\\""`,
-			`"\t}"`,
+			`"\t#}"`,
 			`"}"`,
 		],
 	},
